@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BU Lab Reservation Dashboard</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bu-navy': '#062f68',
+                        'bu-gold': '#fed738',
+                        'bu-green': '#006838',
+                        'bu-slate': '#1e293b',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#f8fafc] font-['Inter'] text-bu-slate">
+
+    <div class="container mx-auto px-4 py-12 max-w-6xl">
+        <header class="text-center mb-12">
+            <h1 class="font-['Montserrat'] font-900 text-5xl text-bu-navy uppercase tracking-tighter">Lab Reservation</h1>
+            <div class="h-2 w-24 bg-bu-gold mx-auto mt-3 rounded-full"></div>
+            
+            <div id="g_id_onload"
+                 data-client_id="284831422316-fnr50s7egrgbr036l29altqo26eht8lv.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse">
+            </div>
+            <div class="g_id_signin mt-8 flex justify-center" data-type="standard"></div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div class="lg:col-span-1 glass-card p-8 rounded-3xl shadow-2xl bg-white/70 border border-white">
+                <h2 class="font-['Montserrat'] font-700 text-bu-navy text-xl mb-6 border-l-4 border-bu-gold pl-4">Create Booking</h2>
+                <form id="reservationForm" class="space-y-5">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-bu-navy">Full Name</label>
+                        <input type="text" name="name" placeholder="Enter Name" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-bu-navy outline-none bg-white/50" required>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-bu-navy">BU Email</label>
+                        <input type="email" name="email" placeholder="user@bethlehem.edu" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-bu-navy outline-none bg-white/50" required>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-bu-navy">Date</label>
+                            <input type="date" name="date" class="w-full p-3 rounded-xl border border-gray-200 outline-none bg-white/50" required>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-bu-navy">Room</label>
+                            <select name="room" class="w-full p-3 rounded-xl border border-gray-200 bg-white/50" required>
+                                <option value="Lab M-001">Lab M-001</option>
+                                <option value="Lab S-306a">Lab S-306a</option>
+                                <option value="Lab S-306b">Lab S-306b</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <input type="time" name="startTime" class="w-1/2 p-3 rounded-xl border border-gray-200 bg-white/50" required>
+                        <input type="time" name="endTime" class="w-1/2 p-3 rounded-xl border border-gray-200 bg-white/50" required>
+                    </div>
+                    <button type="submit" id="submitBtn" class="w-full bg-bu-navy text-white font-black py-4 rounded-xl hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest">Confirm Reservation</button>
+                </form>
+            </div>
+
+            <div class="lg:col-span-2 glass-card p-8 rounded-3xl shadow-2xl bg-white/70 border border-white">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="font-['Montserrat'] font-700 text-bu-navy text-xl border-l-4 border-bu-gold pl-4">Live Schedule</h2>
+                    <button onclick="exportToExcel()" class="text-[10px] bg-bu-green text-white px-5 py-2.5 rounded-full font-black uppercase tracking-widest hover:bg-opacity-90 transition-all">Export XLSX</button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left" id="scheduleTable">
+                        <thead>
+                            <tr class="text-bu-navy font-['Montserrat'] text-[10px] uppercase tracking-widest border-b-2 border-bu-gold">
+                                <th class="pb-4">Date</th>
+                                <th class="pb-4">Location</th>
+                                <th class="pb-4">Time</th>
+                                <th class="pb-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="text-sm">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
